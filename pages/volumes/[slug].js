@@ -2,6 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { volumes } from "../../lib/data";
+import styled from "styled-components";
+import { GlobalStyle } from "@/styles";
 
 export default function VolumeDetail() {
   const router = useRouter();
@@ -19,18 +21,67 @@ export default function VolumeDetail() {
 
   const { title, description, cover, books } = volume;
 
+  const Header = styled.h1`
+    font-family: var(--font-headline-1);
+    color: var(--color-smoke);
+    text-align: center;
+    margin: 40px 0 20px 0;
+  `;
+
+  const Description = styled.p`
+    font-family: var(--font-caption);
+    color: var(--color-smoke);
+    margin: 20px 0;
+    line-height: 1.5;
+  `;
+
+  const BooksList = styled.ul`
+    list-style-type: none;
+    margin: 30px 0 0;
+    padding: 0;
+
+    li {
+      font-family: var(--font-body);
+      font-size: 16px;
+      margin: 10px 0;
+    }
+  `;
+
+  const CoverImage = styled("img")`
+    width: 140px;
+    height: 230px;
+    border-radius: 50%;
+    box-shadow: var(--box-shadow-book);
+    margin-bottom: 30px;
+  `;
+
+  const PreviousNextLink = styled(Link)`
+    color: var(--color-earth);
+    font-size: 16px;
+    font-weight: 700;
+    text-decoration: none;
+    padding: 10px 20px;
+    border: 1px solid var(--color-earth);
+    border-radius: 5px;
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+      background-color: var(--color-clouds);
+    }
+  `;
+
   return (
     <>
       <Link href="/volumes">← All Volumes</Link>
-      <h1>{title}</h1>
-      <p>{description}</p>
-      <ul>
+      <Header>{title}</Header>
+      <Description>{description}</Description>
+      <BooksList>
         {books.map(({ ordinal, title }) => (
           <li key={title}>
             {ordinal}: <strong>{title}</strong>
           </li>
         ))}
-      </ul>
+      </BooksList>
       <Image
         src={cover}
         alt={`Cover image of ${title}`}
@@ -39,18 +90,19 @@ export default function VolumeDetail() {
       />
       {previousVolume ? (
         <div>
-          <Link href={`/volumes/${previousVolume.slug}`}>
+          <PreviousNextLink href={`/volumes/${previousVolume.slug}`}>
             ← Previous Volume: {previousVolume.title}
-          </Link>
+          </PreviousNextLink>
         </div>
       ) : null}
       {nextVolume ? (
         <div>
-          <Link href={`/volumes/${nextVolume.slug}`}>
+          <PreviousNextLink href={`/volumes/${nextVolume.slug}`}>
             Next Volume: {nextVolume.title} →
-          </Link>
+          </PreviousNextLink>
         </div>
       ) : null}
+      <CoverImage src={cover} alt={`Cover image of ${title}`} />
     </>
   );
 }
